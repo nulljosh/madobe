@@ -1,5 +1,5 @@
 import XCTest
-@testable import Janela
+@testable import Madobe
 
 final class ResolveTests: XCTestCase {
     func testEmpty() { XCTAssertNil(resolve("  ")) }

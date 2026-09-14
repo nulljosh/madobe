@@ -1,10 +1,10 @@
-# Contributing to janela
+# Contributing to madobe
 
 ## Setup
 
 ```
-git clone https://github.com/nulljosh/janela.git
-cd janela
+git clone https://github.com/nulljosh/madobe.git
+cd madobe
 npm install
 ```
 

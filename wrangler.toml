@@ -1,9 +1,9 @@
-name = "janela"
+name = "madobe"
 compatibility_date = "2025-01-01"
 
 [assets]
 directory = "./landing"
 
 [[routes]]
-pattern = "janela.heyitsmejosh.com"
+pattern = "madobe.heyitsmejosh.com"
 custom_domain = true

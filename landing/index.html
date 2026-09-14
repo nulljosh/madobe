@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Janela — a browser that writes no browser code</title>
+<title>Madobe — a browser that writes no browser code</title>
 <meta name="description" content="A WebKit browser for Mac, iPhone and iPad. Address bar, back, forward, reload, tabs. Nothing else until there's a reason. This page is the demo.">
 <meta name="theme-color" content="#1d1d1f">
-<meta property="og:title" content="Janela — a web browser">
+<meta property="og:title" content="Madobe — a web browser">
 <meta property="og:description" content="A text field and a WebKit view. Mac, iPhone, iPad.">
 <meta property="og:type" content="website">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -34,20 +34,20 @@ iframe{flex:1;width:100%;border:0;background:#fff}
 </head>
 <body>
 <form class="bar" id="bar" role="navigation" aria-label="Browser bar">
-  <a class="brand" href="/" aria-label="Janela home"><img src="icon.svg" alt=""><span>Janela</span></a>
+  <a class="brand" href="/" aria-label="Madobe home"><img src="icon.svg" alt=""><span>Madobe</span></a>
   <button type="button" id="back" aria-label="Back">‹</button>
   <button type="button" id="fwd" aria-label="Forward">›</button>
-  <input id="addr" value="janela.heyitsmejosh.com" aria-label="Search or enter address" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Search or enter address">
+  <input id="addr" value="madobe.heyitsmejosh.com" aria-label="Search or enter address" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Search or enter address">
   <button type="submit" id="go" aria-label="Reload">↻</button>
-  <a class="src" href="https://github.com/nulljosh/janela">Source</a>
+  <a class="src" href="https://github.com/nulljosh/madobe">Source</a>
 </form>
-<iframe id="page" src="start.html" title="Janela" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe>
+<iframe id="page" src="start.html" title="Madobe" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe>
 <script>
-// Mirrors resolve() in JanelaApp.swift; Wikipedia stands in for the search engine because DuckDuckGo refuses framing.
+// Mirrors resolve() in MadobeApp.swift; Wikipedia stands in for the search engine because DuckDuckGo refuses framing.
 function resolve(s){s=s.trim();if(!s)return null;if(s.includes('://'))return s;if(!s.includes(' ')&&s.includes('.'))return 'https://'+s;return 'https://en.wikipedia.org/wiki/Special:Search?search='+encodeURIComponent(s)}
 const f=document.getElementById('bar'),a=document.getElementById('addr'),p=document.getElementById('page');
 const hist=['start.html'];let i=0;
-function show(u){p.src=u;a.value=u==='start.html'?'janela.heyitsmejosh.com':u.replace(/^https?:\/\//,'');document.getElementById('back').disabled=i===0;document.getElementById('fwd').disabled=i===hist.length-1}
+function show(u){p.src=u;a.value=u==='start.html'?'madobe.heyitsmejosh.com':u.replace(/^https?:\/\//,'');document.getElementById('back').disabled=i===0;document.getElementById('fwd').disabled=i===hist.length-1}
 f.addEventListener('submit',e=>{e.preventDefault();const u=resolve(a.value);if(!u)return;hist.splice(i+1);hist.push(u);i=hist.length-1;show(u);a.blur()});
 document.getElementById('back').addEventListener('click',()=>{if(i>0){i--;show(hist[i])}});
 document.getElementById('fwd').addEventListener('click',()=>{if(i<hist.length-1){i++;show(hist[i])}});
