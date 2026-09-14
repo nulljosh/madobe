@@ -1,8 +1,18 @@
 import SwiftUI
 import WebKit
 
+#if os(macOS)
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { true }
+}
+#endif
+
 @main
 struct LucarneApp: App {
+    #if os(macOS)
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    #endif
+
     var body: some Scene {
         WindowGroup { BrowserView() }
         #if os(macOS)
