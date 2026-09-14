@@ -1,5 +1,5 @@
 import XCTest
-@testable import Fenster
+@testable import Janela
 
 final class ResolveTests: XCTestCase {
     func testEmpty() { XCTAssertNil(resolve("  ")) }

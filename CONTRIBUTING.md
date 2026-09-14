@@ -1,10 +1,10 @@
-# Contributing to fenster
+# Contributing to janela
 
 ## Setup
 
 ```
-git clone https://github.com/nulljosh/fenster.git
-cd fenster
+git clone https://github.com/nulljosh/janela.git
+cd janela
 npm install
 ```
 

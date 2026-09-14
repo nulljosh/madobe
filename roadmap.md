@@ -1,4 +1,4 @@
-# Fenster roadmap (repo folder still `lucarne`)
+# Janela roadmap (repo folder still `lucarne`)
 
 ## Next
 - [ ] kmp/ port for Android/Windows/Linux (see native fleet rollout)

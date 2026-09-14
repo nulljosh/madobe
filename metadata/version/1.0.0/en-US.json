@@ -1,7 +1,7 @@
 {
-  "description": "Fenster is a web browser. An address bar and a WebKit view, the same engine Safari uses.\n\nType an address to open it. Type anything else and it searches DuckDuckGo. Back, forward, reload, and tabs. Nothing else until there is a reason.\n\n• Address bar with search fallback\n• Back, forward, reload\n• Tabs\n• No account, no tracking, no ads\n• Works on iPhone, iPad, and Mac\n\nFenster collects nothing. Sites you open are the only ones that see you.",
+  "description": "Janela is a web browser. An address bar and a WebKit view, the same engine Safari uses.\n\nType an address to open it. Type anything else and it searches DuckDuckGo. Back, forward, reload, and tabs. Nothing else until there is a reason.\n\n• Address bar with search fallback\n• Back, forward, reload\n• Tabs\n• No account, no tracking, no ads\n• Works on iPhone, iPad, and Mac\n\nJanela collects nothing. Sites you open are the only ones that see you.",
   "keywords": "browser,web browser,webkit,tabs,private,simple,minimal,fast,internet",
-  "marketingUrl": "https://fenster.heyitsmejosh.com",
-  "supportUrl": "https://fenster.heyitsmejosh.com",
+  "marketingUrl": "https://janela.heyitsmejosh.com",
+  "supportUrl": "https://janela.heyitsmejosh.com",
   "promotionalText": "An address bar and a WebKit view. Nothing else until there is a reason."
 }
