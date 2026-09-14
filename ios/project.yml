@@ -1,4 +1,4 @@
-name: Lucarne
+name: Fenster
 options:
   bundleIdPrefix: com.nulljosh
   deploymentTarget:
@@ -11,44 +11,44 @@ settings:
     MARKETING_VERSION: "1.0.0"
     CURRENT_PROJECT_VERSION: "202609140530"
 targets:
-  Lucarne:
+  Fenster:
     type: application
     supportedDestinations: [iOS, macOS]
     sources:
       - path: App
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.nulljosh.lucarne
+        PRODUCT_BUNDLE_IDENTIFIER: com.nulljosh.fenster
         INFOPLIST_FILE: App/Info.plist
         GENERATE_INFOPLIST_FILE: NO
         TARGETED_DEVICE_FAMILY: "1,2"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         DEVELOPMENT_TEAM: QMM486NPYC
         CODE_SIGN_STYLE: Automatic
-        CODE_SIGN_ENTITLEMENTS: Lucarne.entitlements
-        CODE_SIGN_ENTITLEMENTS[sdk=macosx*]: Lucarne-macOS.entitlements
-  LucarneTests:
+        CODE_SIGN_ENTITLEMENTS: Fenster.entitlements
+        CODE_SIGN_ENTITLEMENTS[sdk=macosx*]: Fenster-macOS.entitlements
+  FensterTests:
     type: bundle.unit-test
     supportedDestinations: [iOS, macOS]
     sources:
       - path: Tests
     dependencies:
-      - target: Lucarne
+      - target: Fenster
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.nulljosh.lucarne.tests
-        "TEST_HOST[sdk=macosx*]": $(BUILT_PRODUCTS_DIR)/Lucarne.app/Contents/MacOS/Lucarne
+        PRODUCT_BUNDLE_IDENTIFIER: com.nulljosh.fenster.tests
+        "TEST_HOST[sdk=macosx*]": $(BUILT_PRODUCTS_DIR)/Fenster.app/Contents/MacOS/Fenster
         GENERATE_INFOPLIST_FILE: YES
         DEVELOPMENT_TEAM: QMM486NPYC
 schemes:
-  Lucarne:
+  Fenster:
     build:
       targets:
-        Lucarne: all
-        LucarneTests: [test]
+        Fenster: all
+        FensterTests: [test]
     test:
       targets:
-        - LucarneTests
+        - FensterTests
     run:
       config: Debug
     archive:

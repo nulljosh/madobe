@@ -1,10 +1,10 @@
-# Contributing to lucarne
+# Contributing to fenster
 
 ## Setup
 
 ```
-git clone https://github.com/nulljosh/lucarne.git
-cd lucarne
+git clone https://github.com/nulljosh/fenster.git
+cd fenster
 npm install
 ```
 

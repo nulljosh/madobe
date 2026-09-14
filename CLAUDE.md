@@ -1,6 +1,6 @@
 # Lucarne
 
-v1.0.0, WebKit browser. One SwiftUI file, one xcodegen target for iOS and macOS. No web build (it's a browser).
+v1.0.0, WebKit browser. One SwiftUI file, one xcodegen target for iOS and macOS. No web build (it's a browser). Named after the French word for dormer window (ASC name was "Nook" rejected as too common; "Lucarne" was chosen from a list of window-themed names, 40+ alternatives taken).
 
 ## Files
 
@@ -20,4 +20,4 @@ xcodebuild build -project Lucarne.xcodeproj -scheme Lucarne -destination 'generi
 
 - WebKit does the browsing. Don't add a rendering, history or cookie layer; if the OS has it, use it.
 - Tabs are in memory. Persist only when someone asks.
-- ASC record 6809355192 (created 2026-09-07, iOS platform; add macOS in ASC when shipping Mac). Bundle com.nulljosh.lucarne.
+- ASC record 6809355192 (created 2026-09-07, iOS platform added; macOS platform added later, both 1.0.0 submitted). Bundle com.nulljosh.lucarne.

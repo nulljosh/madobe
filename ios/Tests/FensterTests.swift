@@ -1,5 +1,5 @@
 import XCTest
-@testable import Lucarne
+@testable import Fenster
 
 final class ResolveTests: XCTestCase {
     func testEmpty() { XCTAssertNil(resolve("  ")) }
