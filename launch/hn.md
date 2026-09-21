@@ -1,0 +1,4 @@
+Title: Show HN: Madobe – a browser that's just an address bar and WebKit
+
+Body:
+Madobe is a WKWebView inside a SwiftUI toolbar, one target shipping to Mac, iPhone and iPad. It doesn't reimplement rendering, JavaScript, cookies, back-forward cache or content blocking, it just inherits WebKit's own correctness for those, since a homemade version of any of them would be worse and would need maintaining forever. The only real logic in the app is resolve(), one pure function that turns typed text into a URL: a scheme loads as is, a token with a dot gets https:// in front, anything else searches DuckDuckGo. Tabs are an array of pages held in memory for the process lifetime, never persisted, because persistence is a feature and every added feature is a new place to get something wrong. It's free, has no telemetry, and the whole app is one Swift file. Curious what people think is missing, and whether "does nothing extra" is actually a feature people want in a browser.
