@@ -1,3 +1,5 @@
+Skip: no technical hook
+
 Title: Show HN: Madobe – a browser that's just an address bar and WebKit
 
 Body:
