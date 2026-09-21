@@ -13,6 +13,7 @@ WebKit browser. One SwiftUI file, iOS and macOS from the same code. Address bar,
 | `ios/project.yml` | xcodegen project definition for iOS and macOS. |
 | `landing/index.html` | Landing page: address bar + embedded browser iframe for a live demo. Hero and tagline. |
 | `landing/start.html` | Start/home page (what loads when the browser opens with no URL). |
+| `landing/deploy.sh` | Deploy script for landing page (wrangler deploy). |
 | `wrangler.toml` | Cloudflare Worker deployment for the landing page. |
 
 ## Design
