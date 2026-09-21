@@ -6,6 +6,6 @@
   .g { stroke-dasharray: 1 4; }
 </style><text x="38" y="11" font-size="10">Lines of real code</text><line x1="38" y1="26" x2="458" y2="26" class="g"/><text x="34" y="29" font-size="9" text-anchor="end">401</text><line x1="38" y1="97" x2="458" y2="97" class="g"/><text x="34" y="100" font-size="9" text-anchor="end">200</text>
 <line x1="38" y1="26" x2="38" y2="166"/><line x1="38" y1="166" x2="458" y2="166"/>
-<polyline points="38,126 49,122 61,121 73,103 84,99 96,51 108,30 119,30 131,30 143,30 154,30 166,26 178,26 189,26 201,75 213,79 224,64 236,45 248,44 259,44 271,44 283,44 294,44 306,44 318,44 329,44 341,44 353,44 364,44 376,44 388,44 399,44 411,44 423,44 434,44 446,44 458,44" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-<text x="38" y="182" font-size="10">Sep 6</text><text x="458" y="182" font-size="10" text-anchor="end">Sep 13</text>
-<text x="38" y="196" font-size="10" font-weight="600">352 lines &#183; 28 commits since Sep 6 2026</text></svg>
+<polyline points="38,126 49,122 60,121 72,103 83,99 94,51 106,30 117,30 128,30 140,30 151,30 162,26 174,26 185,26 196,75 208,79 219,64 230,45 242,44 253,44 265,44 276,44 287,44 299,44 310,44 321,44 333,44 344,44 355,44 367,44 378,44 389,44 401,44 412,44 423,44 435,44 446,44 458,42" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="38" y="182" font-size="10">Sep 6</text><text x="458" y="182" font-size="10" text-anchor="end">Sep 20</text>
+<text x="38" y="196" font-size="10" font-weight="600">357 lines &#183; 83% documented &#183; 33 commits since Sep 6 2026</text></svg>
