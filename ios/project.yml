@@ -18,7 +18,7 @@ targets:
       - path: App
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.nulljosh.madobe
+        PRODUCT_BUNDLE_IDENTIFIER: com.nulljosh.lucarne
         INFOPLIST_FILE: App/Info.plist
         GENERATE_INFOPLIST_FILE: NO
         TARGETED_DEVICE_FAMILY: "1,2"
@@ -36,7 +36,7 @@ targets:
       - target: Madobe
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.nulljosh.madobe.tests
+        PRODUCT_BUNDLE_IDENTIFIER: com.nulljosh.lucarne.tests
         "TEST_HOST[sdk=macosx*]": $(BUILT_PRODUCTS_DIR)/Madobe.app/Contents/MacOS/Madobe
         GENERATE_INFOPLIST_FILE: YES
         DEVELOPMENT_TEAM: QMM486NPYC

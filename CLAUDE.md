@@ -1,19 +1,19 @@
-# Lucarne
+# Madobe
 
-v1.0.0, WebKit browser. One SwiftUI file, one xcodegen target for iOS and macOS. No web build (it's a browser). Named after the French word for dormer window (ASC name was "Nook" rejected as too common; "Lucarne" was chosen from a list of window-themed names, 40+ alternatives taken).
+v1.0.0, WebKit browser. Renamed from Lucarne 2026-09-14; bundle id stays com.nulljosh.lucarne (ASC). One SwiftUI file, one xcodegen target for iOS and macOS. No web build (it's a browser). Named after the French word for dormer window (ASC name was "Nook" rejected as too common; "Lucarne" was chosen from a list of window-themed names, 40+ alternatives taken).
 
 ## Files
 
-- `ios/App/LucarneApp.swift`: everything. `resolve()` turns input into a URL, `Page` wraps one `WKWebView` + nav delegate, `Tabs` holds pages, `PageView` is the chrome.
-- `ios/Tests/LucarneTests.swift`: resolve + tabs.
+- `ios/App/MadobeApp.swift`: everything. `resolve()` turns input into a URL, `Page` wraps one `WKWebView` + nav delegate, `Tabs` holds pages, `PageView` is the chrome.
+- `ios/Tests/MadobeTests.swift`: resolve + tabs.
 - `landing/`: the page IS a browser (bar + iframe, index.html); hero copy lives in start.html. Deployed via `deploy.sh`.
 
 ## Build
 
 ```bash
 cd ios && xcodegen generate
-xcodebuild test -project Lucarne.xcodeproj -scheme Lucarne -destination 'platform=macOS'
-xcodebuild build -project Lucarne.xcodeproj -scheme Lucarne -destination 'generic/platform=iOS Simulator'
+xcodebuild test -project Madobe.xcodeproj -scheme Madobe -destination 'platform=macOS'
+xcodebuild build -project Madobe.xcodeproj -scheme Madobe -destination 'generic/platform=iOS Simulator'
 ```
 
 ## Rules

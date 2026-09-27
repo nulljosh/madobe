@@ -1,4 +1,4 @@
-# Madobe roadmap (repo folder still `lucarne`)
+# Madobe roadmap
 
 ## Next
 - [ ] kmp/ port for Android/Windows/Linux (see native fleet rollout)

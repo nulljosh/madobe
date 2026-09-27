@@ -12,20 +12,20 @@
       "steps": [
         {
           "name": "bump",
-          "run": "asc xcode version edit --project ios/Lucarne.xcodeproj --version \"$VERSION\" --build-number \"$(date +%Y%m%d%H%M)\""
+          "run": "asc xcode version edit --project ios/Madobe.xcodeproj --version \"$VERSION\" --build-number \"$(date +%Y%m%d%H%M)\""
         },
         {
           "name": "archive",
-          "run": "asc xcode archive --project ios/Lucarne.xcodeproj --scheme Lucarne --archive-path .asc/artifacts/Lucarne.xcarchive --overwrite --xcodebuild-flag=-skipPackagePluginValidation --xcodebuild-flag=-allowProvisioningUpdates --xcodebuild-flag=-destination --xcodebuild-flag=generic/platform=iOS --output json"
+          "run": "asc xcode archive --project ios/Madobe.xcodeproj --scheme Madobe --archive-path .asc/artifacts/Madobe.xcarchive --overwrite --xcodebuild-flag=-skipPackagePluginValidation --xcodebuild-flag=-allowProvisioningUpdates --xcodebuild-flag=-destination --xcodebuild-flag=generic/platform=iOS --output json"
         },
         {
           "name": "export",
-          "run": "asc xcode export --archive-path .asc/artifacts/Lucarne.xcarchive --export-options ExportOptions-iOS.plist --xcodebuild-flag=-allowProvisioningUpdates --overwrite --ipa-path .asc/artifacts/Lucarne.ipa --output json"
+          "run": "asc xcode export --archive-path .asc/artifacts/Madobe.xcarchive --export-options ExportOptions-iOS.plist --xcodebuild-flag=-allowProvisioningUpdates --overwrite --ipa-path .asc/artifacts/Madobe.ipa --output json"
         },
         {
           "name": "publish",
           "if": "SUBMIT",
-          "run": "asc publish appstore --app $IOS_APP_ID --ipa .asc/artifacts/Lucarne.ipa --version $VERSION --wait --submit --confirm --output json"
+          "run": "asc publish appstore --app $IOS_APP_ID --ipa .asc/artifacts/Madobe.ipa --version $VERSION --wait --submit --confirm --output json"
         }
       ]
     }
