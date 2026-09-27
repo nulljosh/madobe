@@ -53,7 +53,8 @@ function resolve(s){s=s.trim();if(!s)return null;if(s.includes('://'))return s;i
 const f=document.getElementById('bar'),a=document.getElementById('addr'),p=document.getElementById('page');
 const hist=['start.html'];let i=0;
 function show(u){p.src=u;a.value=u==='start.html'?'madobe.heyitsmejosh.com':u.replace(/^https?:\/\//,'');document.getElementById('back').disabled=i===0;document.getElementById('fwd').disabled=i===hist.length-1}
-f.addEventListener('submit',e=>{e.preventDefault();const u=resolve(a.value);if(!u)return;hist.splice(i+1);hist.push(u);i=hist.length-1;show(u);a.blur()});
+// ponytail: most sites refuse to be framed (X-Frame-Options), so a host opens in a real tab; only search stays in the frame.
+f.addEventListener('submit',e=>{e.preventDefault();const u=resolve(a.value);if(!u)return;if(!u.startsWith('https://en.wikipedia.org/')){window.open(u,'_blank','noopener');a.blur();return}hist.splice(i+1);hist.push(u);i=hist.length-1;show(u);a.blur()});
 document.getElementById('back').addEventListener('click',()=>{if(i>0){i--;show(hist[i])}});
 document.getElementById('fwd').addEventListener('click',()=>{if(i<hist.length-1){i++;show(hist[i])}});
 a.addEventListener('focus',()=>a.select());
