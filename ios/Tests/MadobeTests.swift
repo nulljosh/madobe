@@ -18,3 +18,22 @@ final class TabsTests: XCTestCase {
     }
     func testNeverClosesLast() { let t = Tabs(); t.close(t.pages[0]); XCTAssertEqual(t.pages.count, 1) }
 }
+
+
+@MainActor
+final class NavigationFailureTests: XCTestCase {
+    func testFailuresAreVisibleAndClearOnNavigation() {
+        let page = Page("")
+        let error = NSError(domain: NSURLErrorDomain, code: NSURLErrorNotConnectedToInternet)
+        page.webView(page.web, didFailProvisionalNavigation: nil, withError: error)
+        XCTAssertEqual(page.errorMessage, error.localizedDescription)
+        page.webView(page.web, didStartProvisionalNavigation: nil)
+        XCTAssertNil(page.errorMessage)
+        page.webView(page.web, didFail: nil, withError: NSError(domain: NSURLErrorDomain, code: NSURLErrorCancelled))
+        XCTAssertNil(page.errorMessage)
+        page.loading = true
+        page.webViewWebContentProcessDidTerminate(page.web)
+        XCTAssertNotNil(page.errorMessage)
+        XCTAssertFalse(page.loading)
+    }
+}

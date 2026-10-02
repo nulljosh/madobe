@@ -6,7 +6,7 @@
 
 A web browser is a text field and a WebKit view. Everything else is opinion. A madobe is a small window in a roof; this is a small window on the web.
 
-Madobe is the starting point: one window, one page, an address bar, back, forward, reload, tabs. Mac, iPhone and iPad from one SwiftUI file. Type a host and it loads, type words and it searches DuckDuckGo. No bookmarks, no sync, no telemetry. Those get added when there's a reason.
+Madobe is the starting point: one window, one page, an address bar, back, forward, reload, tabs. Mac, iPhone and iPad from one SwiftUI file. Type a host and it loads, type words and it searches DuckDuckGo. Failed loads and crashed pages show an error so you can reload. No bookmarks, no sync, no telemetry. Those get added when there's a reason.
 
 <img src="progress.svg" width="460">
 

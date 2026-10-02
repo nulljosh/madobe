@@ -40,6 +40,7 @@ final class Page: NSObject, ObservableObject, Identifiable, WKNavigationDelegate
     @Published var address = ""
     @Published var title = ""
     @Published var loading = false
+    @Published var errorMessage: String?
     @Published var canBack = false
     @Published var canForward = false
 
@@ -62,10 +63,19 @@ final class Page: NSObject, ObservableObject, Identifiable, WKNavigationDelegate
         canBack = web.canGoBack
         canForward = web.canGoForward
     }
-    func webView(_ w: WKWebView, didStartProvisionalNavigation n: WKNavigation!) { sync() }
+    func webView(_ w: WKWebView, didStartProvisionalNavigation n: WKNavigation!) { errorMessage = nil; sync() }
     func webView(_ w: WKWebView, didFinish n: WKNavigation!) { sync() }
-    func webView(_ w: WKWebView, didFail n: WKNavigation!, withError e: Error) { sync() }
-    func webView(_ w: WKWebView, didFailProvisionalNavigation n: WKNavigation!, withError e: Error) { sync() }
+    func webView(_ w: WKWebView, didFail n: WKNavigation!, withError e: Error) {
+        sync()
+        if (e as NSError).code != NSURLErrorCancelled { errorMessage = e.localizedDescription }
+    }
+    func webView(_ w: WKWebView, didFailProvisionalNavigation n: WKNavigation!, withError e: Error) {
+        webView(w, didFail: n, withError: e)
+    }
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        loading = false
+        errorMessage = "This page stopped responding. Reload to try again."
+    }
 }
 
 /// Tab list. ponytail: in-memory only, no restore across launches; persist URLs when that matters.
@@ -139,6 +149,9 @@ struct PageView: View {
             .padding(.horizontal, 10).padding(.vertical, 6)
             .background(.bar)
             if tabs.pages.count > 1 { TabStrip(tabs: tabs) }
+            if let error = page.errorMessage {
+                Text(error).font(.callout).padding().accessibilityLabel("Page error: " + error)
+            }
             WebView(web: page.web).ignoresSafeArea(edges: .bottom)
         }
         .navigationTitle(page.title)
