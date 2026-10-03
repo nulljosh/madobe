@@ -52,8 +52,14 @@ struct PageView: View {
             WebView(web: page.web).ignoresSafeArea(edges: .bottom)
         }
         .navigationTitle(page.title)
+        .onChange(of: services.addressFocusTick) { _, _ in editing = true }
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
+        // Like every browser: tapping the address selects all of it, so typing replaces it.
+        .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidBeginEditingNotification)) { note in
+            guard let field = note.object as? UITextField else { return }
+            DispatchQueue.main.async { field.selectAll(nil) }
+        }
         #endif
     }
 

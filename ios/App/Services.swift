@@ -101,6 +101,8 @@ final class Services: ObservableObject {
     let blocker: ContentBlocker
     @Published var sheet: Sheet?
     @Published var finding = false
+    /// Bumped by the Open Location command; the page focuses its address bar when this changes.
+    @Published var addressFocusTick = 0
 
     init(directory: URL = Library.defaultDirectory, defaults: UserDefaults = .standard) {
         let settings = Settings(defaults: defaults)
