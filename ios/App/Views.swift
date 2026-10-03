@@ -312,10 +312,13 @@ struct SettingsView: View {
                     Picker("Search engine", selection: $settings.engine) {
                         ForEach(SearchEngine.allCases) { Text($0.name).tag($0) }
                     }
-                    TextField("Homepage", text: $settings.homepage)
-                        #if os(iOS)
-                        .keyboardType(.URL).textInputAutocapitalization(.never).autocorrectionDisabled()
-                        #endif
+                    LabeledContent("Homepage") {
+                        TextField("Homepage", text: $settings.homepage)
+                            .multilineTextAlignment(.trailing)
+                            #if os(iOS)
+                            .keyboardType(.URL).textInputAutocapitalization(.never).autocorrectionDisabled()
+                            #endif
+                    }
                 }
                 Section {
                     Toggle("Block trackers and ads", isOn: $settings.blockTrackers)
