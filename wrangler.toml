@@ -1,8 +1,11 @@
 name = "madobe"
+main = "worker/index.js"
 compatibility_date = "2025-01-01"
 
 [assets]
 directory = "./landing"
+binding = "ASSETS"
+run_worker_first = ["/go"]
 
 [[routes]]
 pattern = "madobe.heyitsmejosh.com"

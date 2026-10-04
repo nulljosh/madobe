@@ -10,7 +10,8 @@ v1.0.0, WebKit browser. Renamed from Lucarne 2026-09-14; bundle id stays com.nul
 - `ios/App/Services.swift`: `Settings` (engine, homepage, tracker blocking), `ContentBlocker` (WebKit content rule list of ad and tracking hosts), `Services` (shared state and the open sheet).
 - `ios/App/Views.swift`: browser chrome, tab strip, find bar, Bookmarks, History and Settings screens.
 - `ios/Tests/MadobeTests.swift`: resolve, tabs, library, settings, and a real WebKit compile of the blocker rules.
-- `landing/`: the page IS a browser (bar + iframe, index.html); hero copy lives in start.html; `privacy.html` and `support.html` are the URLs App Store Connect uses. Deployed via `deploy.sh`.
+- `worker/index.js`: `/go?u=` demo proxy for the landing (strips frame-blocking headers; GET, iframe-only, no cookies, frame sandboxed without allow-same-origin).
+- `landing/`: the page IS a browser (bar + iframe through /go, index.html); hero copy lives in start.html; `privacy.html` and `support.html` are the URLs App Store Connect uses. Deployed via `deploy.sh`.
 
 ## Build
 
