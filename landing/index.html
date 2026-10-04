@@ -52,9 +52,13 @@ iframe{flex:1;width:100%;border:0;background:#fff}
 function resolve(s){s=s.trim();if(!s)return null;if(s.includes('://'))return s;if(!s.includes(' ')&&s.includes('.'))return 'https://'+s;return 'https://en.wikipedia.org/wiki/Special:Search?search='+encodeURIComponent(s)}
 const f=document.getElementById('bar'),a=document.getElementById('addr'),p=document.getElementById('page');
 const hist=['start.html'];let i=0;
-function show(u){p.src=u;a.value=u==='start.html'?'madobe.heyitsmejosh.com':u.replace(/^https?:\/\//,'');document.getElementById('back').disabled=i===0;document.getElementById('fwd').disabled=i===hist.length-1}
-// ponytail: most sites refuse to be framed (X-Frame-Options), so a host opens in a real tab; only search stays in the frame.
-f.addEventListener('submit',e=>{e.preventDefault();const u=resolve(a.value);if(!u)return;if(!u.startsWith('https://en.wikipedia.org/')){window.open(u,'_blank','noopener');a.blur();return}hist.splice(i+1);hist.push(u);i=hist.length-1;show(u);a.blur()});
+// ponytail: only hosts that allow framing load in the demo; anything else shows a notice with a real-tab link. Add hosts to FRAMEABLE as found.
+const FRAMEABLE=/(^|\.)(wikipedia|wikimedia|wiktionary|example)\.(org|com)$/;
+function show(u){const ok=u==='start.html'||FRAMEABLE.test(new URL(u).hostname);
+  if(ok)p.removeAttribute('srcdoc'),p.src=u;
+  else p.srcdoc='<body style="font:16px system-ui;text-align:center;padding:4rem 1.5rem;color:#1d1d1f"><h2>This site blocks embedding</h2><p>The demo cannot show it here. The app can.</p><p><a target="_blank" rel="noopener" href="'+u.replace(/"/g,'&quot;')+'">Open in a new tab</a></p>';
+  a.value=u==='start.html'?'madobe.heyitsmejosh.com':u.replace(/^https?:\/\//,'');document.getElementById('back').disabled=i===0;document.getElementById('fwd').disabled=i===hist.length-1}
+f.addEventListener('submit',e=>{e.preventDefault();const u=resolve(a.value);if(!u)return;hist.splice(i+1);hist.push(u);i=hist.length-1;show(u);a.blur()});
 document.getElementById('back').addEventListener('click',()=>{if(i>0){i--;show(hist[i])}});
 document.getElementById('fwd').addEventListener('click',()=>{if(i<hist.length-1){i++;show(hist[i])}});
 a.addEventListener('focus',()=>a.select());
