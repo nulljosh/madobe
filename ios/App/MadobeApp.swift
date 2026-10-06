@@ -13,11 +13,14 @@ struct MadobeApp: App {
     #endif
     @StateObject private var services: Services
     @StateObject private var tabs: Tabs
+    #if os(macOS)
+    @ObservedObject private var floating = FloatController.shared
+    #endif
 
     init() {
         let services = Services.shared
         _services = StateObject(wrappedValue: services)
-        _tabs = StateObject(wrappedValue: Tabs(services: services, restore: true))
+        _tabs = StateObject(wrappedValue: Tabs(services: services, restore: true, defaults: services.defaults))
     }
 
     var body: some Scene {
@@ -31,9 +34,30 @@ struct MadobeApp: App {
                 Button("New Private Tab") { tabs.add(isPrivate: true) }.keyboardShortcut("n", modifiers: [.command, .shift])
                 Button("Close Tab") { tabs.close(tabs.page) }.keyboardShortcut("w").disabled(tabs.pages.count == 1)
             }
+            #if os(macOS)
+            CommandGroup(after: .toolbar) {
+                Button("Float Current Tab") { floating.open(tabs.page.address, services: services) }
+                    .keyboardShortcut("f", modifiers: [.command, .shift])
+                    .disabled(tabs.page.address.isEmpty)
+                Button(floating.clickThrough ? "Turn Float Click-Through Off" : "Turn Float Click-Through On") {
+                    floating.toggleClickThrough()
+                }
+                .keyboardShortcut("f", modifiers: [.command, .option])
+                .disabled(!floating.isOpen)
+                Button("Close Float Window") { floating.close() }
+                    .keyboardShortcut("f", modifiers: [.command, .control])
+                    .disabled(!floating.isOpen)
+            }
+            #endif
             CommandGroup(after: .textEditing) {
                 Button("Find in Page") { services.finding = true }.keyboardShortcut("f")
                 Button("Open Location") { services.addressFocusTick += 1 }.keyboardShortcut("l")
+            }
+            CommandMenu("Site") {
+                Button("Site Rules…") { services.sheet = .siteRules }.keyboardShortcut("s", modifiers: [.command, .option])
+                #if os(iOS)
+                Button("Pair Two Pages") { tabs.startPair() }.keyboardShortcut("p", modifiers: [.command, .option])
+                #endif
             }
             CommandMenu("Bookmarks") {
                 Button("Bookmark This Page") {

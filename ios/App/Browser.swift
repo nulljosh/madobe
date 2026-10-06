@@ -73,15 +73,19 @@ final class Page: NSObject, ObservableObject, Identifiable, WKNavigationDelegate
         self.services = services
         self.isPrivate = isPrivate
         let config = WKWebViewConfiguration()
-        if isPrivate { config.websiteDataStore = .nonPersistent() }
+        config.websiteDataStore = isPrivate ? .nonPersistent() : services.dataStore
         web = WKWebView(frame: .zero, configuration: config)
         super.init()
         web.navigationDelegate = self
         web.uiDelegate = self
         web.allowsBackForwardNavigationGestures = true
         services.blocker.register(web)
+        services.siteBlocker.register(web)
         go(start ?? services.settings.homepage)
     }
+
+    /// Applies the zoom from this site's rule to the page on screen.
+    func applyZoom() { web.pageZoom = services.sites.rule(for: web.url).pageZoom }
 
     func go(_ input: String) {
         guard let u = resolve(input, engine: services.settings.engine) else { return }
@@ -118,15 +122,40 @@ final class Page: NSObject, ObservableObject, Identifiable, WKNavigationDelegate
     }
 
     /// Web links stay in the tab; mailto:, tel: and other schemes go to the system.
-    func webView(_ w: WKWebView, decidePolicyFor action: WKNavigationAction) async -> WKNavigationActionPolicy {
-        guard let url = action.request.url, let scheme = url.scheme?.lowercased() else { return .allow }
-        if ["http", "https", "about", "blob", "data", "file"].contains(scheme) { return .allow }
+    /// Page loads also pick up the site's rules: scripts on or off, a dark look, zoom.
+    func webView(_ w: WKWebView, decidePolicyFor action: WKNavigationAction,
+                 preferences: WKWebpagePreferences) async -> (WKNavigationActionPolicy, WKWebpagePreferences) {
+        await decide(request: action.request, mainFrame: action.targetFrame?.isMainFrame ?? true, preferences: preferences)
+    }
+
+    /// The decision behind the delegate call, kept apart so tests can run it without a real navigation.
+    func decide(request: URLRequest, mainFrame: Bool = true,
+                preferences: WKWebpagePreferences) async -> (WKNavigationActionPolicy, WKWebpagePreferences) {
+        guard let url = request.url, let scheme = url.scheme?.lowercased() else { return (.allow, preferences) }
+        if ["http", "https"].contains(scheme) {
+            if mainFrame { applyRules(for: url, to: preferences) }
+            return (.allow, preferences)
+        }
+        if ["about", "blob", "data", "file"].contains(scheme) { return (.allow, preferences) }
         openExternally(url)
-        return .cancel
+        return (.cancel, preferences)
+    }
+
+    private func applyRules(for url: URL, to preferences: WKWebpagePreferences) {
+        let rule = services.sites.rule(for: url)
+        preferences.allowsContentJavaScript = !rule.blockScripts
+        let controller = web.configuration.userContentController
+        controller.removeAllUserScripts()
+        if rule.forceDark {
+            controller.addUserScript(WKUserScript(source: SiteRule.darkScript, injectionTime: .atDocumentStart, forMainFrameOnly: true))
+        }
+        web.pageZoom = rule.pageZoom
     }
 
     func webView(_ w: WKWebView, createWebViewWith config: WKWebViewConfiguration,
                  for action: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+        let rule = services.sites.rule(for: w.url)
+        guard rule.allowsNewWindow(userTappedLink: action.navigationType == .linkActivated) else { return nil }
         if let url = action.request.url { onNewTab?(url) }
         return nil
     }
@@ -137,6 +166,8 @@ final class Page: NSObject, ObservableObject, Identifiable, WKNavigationDelegate
 final class Tabs: ObservableObject {
     @Published var pages: [Page]
     @Published var current: UUID
+    /// Two pages in one window (iPhone and iPad). Nil when not pairing.
+    @Published var pair: PairModel?
     private let services: Services
     private let defaults: UserDefaults?
     static let restoreKey = "tabs.urls"
@@ -175,6 +206,27 @@ final class Tabs: ObservableObject {
         if current == p.id { current = pages[min(i, pages.count - 1)].id }
         save()
     }
+
+    /// Opens a link that arrived from outside the window. Float is handled by the Mac window code.
+    func open(_ link: IncomingLink) {
+        switch link.destination {
+        case .tab, .float: add(link.url.absoluteString)
+        case .pair: startPair(second: link.url.absoluteString)
+        }
+    }
+
+    /// Splits the window: the current tab on one side, `second` (or the homepage) on the other.
+    func startPair(second: String? = nil) {
+        if let pair {
+            if let second { pair.second.go(second) }
+            return
+        }
+        let p = Page(second, services: services)
+        p.onNewTab = { [weak p] url in p?.go(url.absoluteString) }
+        pair = PairModel(first: page, second: p)
+    }
+
+    func endPair() { pair = nil }
 
     private func save() {
         guard let defaults else { return }

@@ -30,6 +30,7 @@ final class ContentBlocker {
     private(set) var enabled: Bool
     private var list: WKContentRuleList?
     private let views = NSHashTable<WKWebView>.weakObjects()
+    private let attached = NSMapTable<WKWebView, WKContentRuleList>.weakToStrongObjects()
 
     static let blockedDomains = [
         "doubleclick.net", "googlesyndication.com", "googleadservices.com", "google-analytics.com",
@@ -74,8 +75,8 @@ final class ContentBlocker {
 
     private func apply(to web: WKWebView) {
         let controller = web.configuration.userContentController
-        controller.removeAllContentRuleLists()
-        if enabled, let list { controller.add(list) }
+        if let old = attached.object(forKey: web) { controller.remove(old); attached.removeObject(forKey: web) }
+        if enabled, let list { controller.add(list); attached.setObject(list, forKey: web) }
     }
 
     private func compile() async {
@@ -92,23 +93,71 @@ final class Services: ObservableObject {
     static let shared = Services()
 
     enum Sheet: String, Identifiable {
-        case bookmarks, history, settings
+        case bookmarks, history, settings, siteRules
         var id: String { rawValue }
     }
 
     let library: Library
     let settings: Settings
     let blocker: ContentBlocker
+    let sites: SiteRules
+    let siteBlocker = RuleListHost(identifier: "madobe-sites")
+    let defaults: UserDefaults
+    let dataStore: WKWebsiteDataStore
     @Published var sheet: Sheet?
     @Published var finding = false
     /// Bumped by the Open Location command; the page focuses its address bar when this changes.
     @Published var addressFocusTick = 0
 
-    init(directory: URL = Library.defaultDirectory, defaults: UserDefaults = .standard) {
+    /// Links waiting to be opened: from Shortcuts, the Share extension or a menu. The window drains them.
+    @Published var incoming: [IncomingLink] = []
+
+    func receive(_ url: URL, in destination: IncomingLink.Destination = .tab) {
+        incoming.append(IncomingLink(url: url, destination: destination))
+    }
+
+    init(directory: URL = Library.defaultDirectory, defaults: UserDefaults = Profile.defaults,
+         dataStore: WKWebsiteDataStore? = nil) {
         let settings = Settings(defaults: defaults)
+        self.defaults = defaults
+        self.dataStore = dataStore ?? Profile.dataStore
         self.library = Library(directory: directory)
+        self.sites = SiteRules(directory: directory)
         self.settings = settings
         self.blocker = ContentBlocker(enabled: settings.blockTrackers)
         settings.onBlockChange = { [blocker] on in blocker.setEnabled(on) }
+        let refresh = { [sites, siteBlocker] in
+            let json = SiteRules.imageRulesJSON(sites.rules)
+            Task { await siteBlocker.update(json: json) }
+        }
+        sites.onChange = refresh
+        refresh()
+    }
+}
+
+struct IncomingLink: Equatable, Identifiable {
+    enum Destination: Equatable { case tab, pair, float }
+    let id = UUID()
+    let url: URL
+    var destination: Destination
+}
+
+/// A named throwaway profile (MADOBE_PROFILE=name) keeps tests and QA runs away from real data.
+enum Profile {
+    static var name: String? {
+        let n = ProcessInfo.processInfo.environment["MADOBE_PROFILE"]
+        return n?.isEmpty == false ? n : nil
+    }
+
+    static var defaults: UserDefaults {
+        name.flatMap { UserDefaults(suiteName: "com.nulljosh.lucarne.profile.\($0)") } ?? .standard
+    }
+
+    @MainActor static var dataStore: WKWebsiteDataStore {
+        guard let name else { return .default() }
+        var bytes = Array(name.utf8.prefix(16))
+        while bytes.count < 16 { bytes.append(0x4d) }
+        return WKWebsiteDataStore(forIdentifier: UUID(uuid: (bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7],
+                                                              bytes[8], bytes[9], bytes[10], bytes[11], bytes[12], bytes[13], bytes[14], bytes[15])))
     }
 }

@@ -8,17 +8,37 @@ struct BrowserView: View {
     var body: some View {
         Group {
             #if os(iOS)
-            NavigationStack { PageView(tabs: tabs, page: tabs.page, services: services).id(tabs.current) }
+            if let pair = tabs.pair {
+                PairView(tabs: tabs, pair: pair)
+            } else {
+                NavigationStack { PageView(tabs: tabs, page: tabs.page, services: services).id(tabs.current) }
+            }
             #else
             PageView(tabs: tabs, page: tabs.page, services: services).id(tabs.current)
             #endif
         }
+        .onAppear { drain() }
+        .onChange(of: services.incoming) { _, _ in drain() }
         .sheet(item: $services.sheet) { sheet in
             switch sheet {
             case .bookmarks: BookmarksView(tabs: tabs, library: services.library)
             case .history: HistoryView(tabs: tabs, library: services.library)
             case .settings: SettingsView(settings: services.settings, library: services.library)
+            case .siteRules: SiteRulesView(page: tabs.page, sites: services.sites)
             }
+        }
+    }
+
+    /// Opens links that arrived from Shortcuts or the Share extension.
+    private func drain() {
+        let links = services.incoming
+        guard !links.isEmpty else { return }
+        services.incoming = []
+        for link in links {
+            #if os(macOS)
+            if link.destination == .float { FloatController.shared.open(link.url.absoluteString, services: services); continue }
+            #endif
+            tabs.open(link)
         }
     }
 }
@@ -124,6 +144,16 @@ struct PageView: View {
             Divider()
             Button { services.finding = true } label: { Label("Find in Page", systemImage: "magnifyingglass") }
             Toggle(isOn: $settings.blockTrackers) { Label("Block Trackers and Ads", systemImage: "shield") }
+            Button { services.sheet = .siteRules } label: { Label("Site Rules", systemImage: "slider.horizontal.3") }
+                .disabled(SiteKey.key(for: page.web.url) == nil)
+            #if os(iOS)
+            Button { tabs.startPair() } label: { Label("Pair: Two Pages at Once", systemImage: "rectangle.split.2x1") }
+            #else
+            Button { FloatController.shared.open(page.address, services: services) } label: {
+                Label("Float This Page", systemImage: "pip")
+            }
+            .disabled(page.address.isEmpty)
+            #endif
             if let url = page.web.url {
                 ShareLink(item: url) { Label("Share", systemImage: "square.and.arrow.up") }
                 Button { openExternally(url) } label: { Label("Open in Default Browser", systemImage: "safari") }

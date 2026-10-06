@@ -9,6 +9,11 @@ v1.0.0, WebKit browser. Renamed from Lucarne 2026-09-14; bundle id stays com.nul
 - `ios/App/Library.swift`: bookmarks and history as two JSON files in Application Support (history capped at 500, newest first, repeat visits move to the top).
 - `ios/App/Services.swift`: `Settings` (engine, homepage, tracker blocking), `ContentBlocker` (WebKit content rule list of ad and tracking hosts), `Services` (shared state and the open sheet).
 - `ios/App/Views.swift`: browser chrome, tab strip, find bar, Bookmarks, History and Settings screens.
+- `ios/App/SiteRules.swift`: per-site rules (`SiteRule`, `SiteKey`, `SiteRules` store, image-block rule JSON, `RuleListHost`) and the Site Rules sheet. Applied in `Page.decide` (scripts, dark user script, zoom) and a content rule list (images).
+- `ios/App/Pair.swift`: `PairModel` (split, swap, layout rule) shared; `PairView` is iOS only.
+- `ios/App/Float.swift`: `FloatPrefs` (opacity, click-through, saved frame) shared; `FloatController` and `FloatView` (floating NSPanel plus menu bar item) are macOS only.
+- `ios/App/Intents.swift`: App Intents (Open in Madobe; Open in Float Window on Mac). Links queue in `Services.incoming`.
+- `MADOBE_PROFILE=name` env var gives a throwaway library, defaults and cookie store for QA runs.
 - `ios/Tests/MadobeTests.swift`: resolve, tabs, library, settings, and a real WebKit compile of the blocker rules.
 - `worker/index.js`: `/go?u=` demo proxy for the landing (strips frame-blocking headers; GET, iframe-only, no cookies, frame sandboxed without allow-same-origin).
 - `landing/`: the page IS a browser (bar + iframe through /go, index.html); hero copy lives in start.html; `privacy.html` and `support.html` are the URLs App Store Connect uses. Deployed via `deploy.sh`.
